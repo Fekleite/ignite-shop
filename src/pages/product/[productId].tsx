@@ -7,6 +7,7 @@ import Image from "next/image"
 import { GetStaticPaths } from "next"
 import axios from "axios"
 import { useState } from "react"
+import Head from "next/head"
 
 interface ProductProps {
   product: {
@@ -41,22 +42,27 @@ export default function Product({ product }: ProductProps) {
   }
 
   return (
-    <ProductContainer>
-      <ImageContainer>
-        <Image src={product.imageUrl} width={520} height={480} alt={product.name} />
-      </ImageContainer>
+    <>
+      <Head>
+        <title>{product.name} | Ignite Shop</title>
+      </Head>
+      <ProductContainer>
+        <ImageContainer>
+          <Image src={product.imageUrl} width={520} height={480} alt={product.name} />
+        </ImageContainer>
 
-      <ProductDetails>
-        <h1>{product.name}</h1>
-        <span>{product.price}</span>
+        <ProductDetails>
+          <h1>{product.name}</h1>
+          <span>{product.price}</span>
 
-        <p>{product.description}</p>
+          <p>{product.description}</p>
 
-        <button onClick={handleBuyProduct} disabled={isCreatingCheckoutSession}>
-          Comprar agora
-        </button>
-      </ProductDetails>
-    </ProductContainer>
+          <button onClick={handleBuyProduct} disabled={isCreatingCheckoutSession}>
+            Comprar agora
+          </button>
+        </ProductDetails>
+      </ProductContainer>
+    </>
   )
 }
 
