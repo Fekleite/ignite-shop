@@ -5,6 +5,7 @@ import logoImg from '../assets/logo.svg'
 import { Container, Header } from '@/styles/pages/app';
 import Image from 'next/image';
 import { Handbag } from '@phosphor-icons/react';
+import { CartPanel } from '@/components/cart-panel';
 
 globalStyles();
 
@@ -22,6 +23,8 @@ export default function App({ Component, pageProps }: AppProps) {
       </Header>
 
       <Component {...pageProps} />
+
+      <CartPanel />
     </Container>
   )
 }
