@@ -42,6 +42,12 @@ export const Product = styled(Link, {
     opacity: 0,
     transition: 'all 0.2s ease-in-out',
 
+    div: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 4
+    },
+
     strong: {
       fontSize: '$lg',
       color: '$gray100'
@@ -51,6 +57,25 @@ export const Product = styled(Link, {
       fontSize: '$xl',
       fontWeight: 'bold',
       color: '$green300'
+    },
+
+    button: {
+      marginTop: 'auto',
+      backgroundColor: '$green500',
+      border: 0,
+      color: '$white',
+      borderRadius: 8,
+      padding: '0.75rem',
+      cursor: 'pointer',
+
+      '&:not(:disabled):hover': {
+        backgroundColor: '$green300',
+      },
+
+      '&:disabled': {
+        opacity: 0.6,
+        cursor: 'not-allowed'
+      }
     },
   },
 
