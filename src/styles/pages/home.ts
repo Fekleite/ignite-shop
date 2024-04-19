@@ -60,7 +60,6 @@ export const Product = styled(Link, {
     },
 
     button: {
-      marginTop: 'auto',
       backgroundColor: '$green500',
       border: 0,
       color: '$white',
