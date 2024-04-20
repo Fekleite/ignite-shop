@@ -12,10 +12,14 @@ import {
   CartResume
 } from "@/styles/components/cart-panel";
 
-export function CartPanel() {
+interface CartPanelProps {
+  onClose: () => void
+}
+
+export function CartPanel({ onClose }: CartPanelProps) {
   return (
     <PanelContainer>
-      <CloseButton>
+      <CloseButton onClick={onClose}>
         <X size={24} />
       </CloseButton>
 
