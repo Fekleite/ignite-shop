@@ -35,8 +35,6 @@ export function CartItemContextProvider({
   const { items } = cartItemState
   const totalCartItems = items.length
 
-  console.log(items)
-
   function addItemToCart(data: Item,) {
     const newItem: Item = {
       amount: data.amount,
