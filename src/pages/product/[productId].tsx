@@ -1,44 +1,27 @@
-import { useRouter } from "next/router"
 import { ImageContainer, ProductContainer, ProductDetails } from "../../styles/pages/product"
 import { GetStaticProps } from "next"
-import { stripe } from "@/lib/stripe"
+import { useContext } from "react"
 import Stripe from "stripe"
 import Image from "next/image"
 import { GetStaticPaths } from "next"
-import axios from "axios"
-import { useState } from "react"
 import Head from "next/head"
 
+import { stripe } from "@/lib/stripe"
+import { CartItemsContext } from "@/contexts/cart-context"
+import { ProductType } from "@/@types/product"
+
 interface ProductProps {
-  product: {
-    id: string
-    name: string
-    imageUrl: string
-    price: string
-    description: string
-    defaultPriceId: string
-  }
+  product: ProductType
 }
 
 export default function Product({ product }: ProductProps) {
-  const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] = useState(false)
+  const { addItemToCart } = useContext(CartItemsContext)
 
-  async function handleBuyProduct() {
-    try {
-      setIsCreatingCheckoutSession(true)
-
-      const response = await axios.post('/api/checkout', {
-        priceId: product.defaultPriceId
-      })
-
-      const { checkoutUrl } = response.data
-
-      window.location.href = checkoutUrl
-    } catch (error) {
-      setIsCreatingCheckoutSession(false)
-
-      alert('Falha ao redirecionar ao checkout!')
-    }
+  function handleAddToCartProduct() {
+    addItemToCart({
+      product,
+      amount: 1
+    })
   }
 
   return (
@@ -57,7 +40,7 @@ export default function Product({ product }: ProductProps) {
 
           <p>{product.description}</p>
 
-          <button onClick={handleBuyProduct} disabled={isCreatingCheckoutSession}>
+          <button onClick={handleAddToCartProduct}>
             Colocar na sacola
           </button>
         </ProductDetails>
@@ -105,7 +88,8 @@ export const getStaticProps: GetStaticProps<any, { productId: string }> = async 
           currency: 'BRL'
         }).format(price.unit_amount! / 100),
         description: product.description,
-        defaultPriceId: price.id
+        defaultPriceId: price.id,
+        priceNumber: price.unit_amount
       }
     },
     revalidate: 60 * 60 * 1, // 1 hora

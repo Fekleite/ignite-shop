@@ -3,6 +3,7 @@ import Image from "next/image";
 import Head from 'next/head';
 import Stripe from 'stripe';
 import { Handbag } from '@phosphor-icons/react';
+import { useContext } from 'react';
 
 import 'keen-slider/keen-slider.min.css'
 import { useKeenSlider } from 'keen-slider/react'
@@ -10,23 +11,29 @@ import { useKeenSlider } from 'keen-slider/react'
 import { stripe } from '@/lib/stripe';
 
 import { HomeContainer, Product } from "@/styles/pages/home";
+import { CartItemsContext } from '@/contexts/cart-context';
+import { ProductType } from '@/@types/product';
 
 interface HomeProps {
-  products: {
-    id: string;
-    name: string;
-    imageUrl: string,
-    price: string
-  }[]
+  products: ProductType[]
 }
 
 export default function Home({ products }: HomeProps) {
+  const { addItemToCart } = useContext(CartItemsContext)
+
   const [sliderRef] = useKeenSlider({
     slides: {
       perView: 1.8,
       spacing: 48,
     },
   })
+
+  function handleAddToCartProduct(product: ProductType) {
+    addItemToCart({
+      product,
+      amount: 1
+    })
+  }
 
   return (
     <>
@@ -36,7 +43,7 @@ export default function Home({ products }: HomeProps) {
       <HomeContainer ref={sliderRef} className='keen-slider'>
         {products.map((product) => {
           return (
-            <Product className="keen-slider__slide" key={product.id} href={`/product/${product.id}`} prefetch={false}>
+            <Product className="keen-slider__slide" key={product.id} href={`/product/${product.id}`} prefetch={false} >
               <Image src={product.imageUrl} width={520} height={480} alt={product.name} />
 
               <footer>
@@ -45,7 +52,7 @@ export default function Home({ products }: HomeProps) {
                   <span>{product.price}</span>
                 </div>
 
-                <button>
+                <button onClick={() => handleAddToCartProduct(product)}>
                   <Handbag size={32} />
                 </button>
               </footer>
@@ -72,7 +79,9 @@ export const getStaticProps: GetStaticProps = async () => {
       price: new Intl.NumberFormat('pt-BR', {
         style: 'currency',
         currency: 'BRL'
-      }).format(price.unit_amount! / 100)
+      }).format(price.unit_amount! / 100),
+      priceId: price.id,
+      priceNumber: price.unit_amount
     }
   })
 
